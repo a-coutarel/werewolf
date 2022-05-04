@@ -11,7 +11,7 @@ public class Thief extends Generic_role {
 
     /**
      * @param player
-     * @return name of the player's role in parameter
+     * @return name of the role of the player in parameter
      */
     public String stealRole(Generic_role player) {
         return player.getRole_name();

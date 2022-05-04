@@ -9,38 +9,35 @@ import utils.Lire;
 
 public class View {
     
+    // controller of the game
     private Controller controller;
 
 
+    /**
+     * Constructor
+     * @param controller of the game
+     */
     public View(Controller controller) {
         this.controller = controller;
     }
 
 
-    public final static void clearConsole()
-    {
-        try
-        {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else {
-                System.out.print("\033\143");
-            }
+    /**
+     * Clears the console
+     */
+    private final static void clearConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) { new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor(); }
+            else { System.out.print("\033\143"); }
         }
         catch (final Exception e) { System.out.println("Error when trying to clear the console."); }
     }
 
-    private void startStep(String name) {
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("It's the "+name+"'s turn, you have to call the "+name+" to wake up.");
 
-        System.out.println("");
-        this.timer("Waiting for the "+name+" : ");
-    }
-
+    /**
+     * Makes a delay of 1s and print the text placed in parameter
+     * @param text
+     */
     private void timer(String text) {
         for (int j = 5; j > 0; j--) {
             System.out.println(text + j + "s");
@@ -49,13 +46,18 @@ public class View {
         }
     }
 
+
+    /**
+     * Prints all players with their role and prints the players targeted by the werewolves and by the witch
+     * <p>
+     * This fuction is just useful for the game master to follow the progress of the game
+     */
     private void printPlayers() {
-        
         for(Generic_role player : this.controller.getPlayers_list()) {
             System.out.println(player.toString());
         }
         
-        if(this.controller.getTargeted_player_werewolf() != null) {
+        if(this.controller.getTargeted_player_werewolf() != null) { 
             System.out.println("** Player targeted by the werewolves : " + this.controller.getTargeted_player_werewolf().getName());
         }
 
@@ -64,6 +66,11 @@ public class View {
         }
     }
 
+
+    /**
+     * Asks the number of players and their names
+     * @return ArrayList<String> of players'names
+     */
     public ArrayList<String> initPlayers() {
         ArrayList<String> res  = new ArrayList<String>();
         clearConsole();
@@ -85,16 +92,50 @@ public class View {
         return res;
     }
 
-    public void start() {
+
+    /**
+     * Indicates to the game master which role he has to call to wake up
+     * @param role
+     */
+    private void startStep(String role) {
+        clearConsole();
+        System.out.println("---- GAME MASTER ----");
+        System.out.println("\nIt's the "+role+"'s turn, you have to call the "+role+" to wake up.");
+        System.out.println("");
+        this.timer("Waiting for the "+role+" : ");
+    }
+
+
+    /**
+     * Indicates to the game master informations of the end of a step
+     * @param role
+     * @param text
+     */
+    private void endStep(String role, String text) {
+        System.out.println("Great ! You can go to sleep now.");
+        System.out.println("");
+        timer("Waiting for the "+role+" : ");
         clearConsole();
         System.out.println("---- GAME MASTER ----");
         System.out.println("");
-        System.out.println("Here is the list of players and their associated roles :");
-        
-        this.printPlayers();
-
+        System.out.println(text);
         System.out.println("");
-        System.out.println("Go around the table and whisper to each player their role.");
+        this.printPlayers();
+        System.out.println("\nIf you're done, press enter to continue :");
+        Lire.S();
+        this.timer("Next step in : ");
+    }
+
+
+    /**
+     * View of the starting stage
+     */
+    public void start() {
+        clearConsole();
+        System.out.println("---- GAME MASTER ----");
+        System.out.println("\nHere is the list of players and their associated roles :");
+        this.printPlayers();
+        System.out.println("\nGo around the table and whisper to each player their role.");
         System.out.println("If you're done, press enter to continue :");
         Lire.S();
         System.out.println("It's the night, the village goes to sleep, players close their eyes.");
@@ -102,49 +143,64 @@ public class View {
         this.timer("Next step in : ");
     }
 
+
+    /**
+     * Indicates to the game master that it's the beginning of the night
+     */
+    public void startNight() {
+        clearConsole();
+        System.out.println("---- GAME MASTER ----");
+        System.out.println("\nIt's the night, the village goes to sleep, players close their eyes.");
+        System.out.println("\nHere is the list of players in this step of the game :");
+        this.printPlayers();
+        System.out.println("\nIf you're done, press enter to continue :");
+        Lire.S();
+        this.timer("Next step in : ");
+    }
+
+
+    /**
+     * View of the thief's step
+     * @param thief_name
+     * @return name of the player choosen by the thief
+     */
     public String thiefStep(String thief_name) {
         this.startStep("thief");
 
         clearConsole();
         System.out.println("---- THIEF (" + thief_name + ") ----");
-        System.out.println("");
-        System.out.println("It's your turn, you must choose a player to steal his role.");
+        System.out.println("\nIt's your turn, you must choose a player to steal his role.");
         String player_name = "";
         do {
             System.out.println("Enter the player's name : ");
             player_name = Lire.S();
         }while(this.controller.findPlayerByName(player_name) == -1 || player_name.equals(thief_name));
-        System.out.println("");
 
         return player_name;
     }
 
+    /**
+     * Updates the view of the thief's step
+     * @param role_name
+     */
     public void updateThiefStep(String role_name) {
-        System.out.println("Great ! This is now your new role : " + role_name);
-        System.out.println("You can go to sleep.");
-        System.out.println("");
-        this.timer("Waiting for the thief : ");
-
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("You can inform the player who was robbed that he is now a villager.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
+        System.out.println("\nThis is now your new role : " + role_name);
+        this.endStep("thief", "You can inform the player who was robbed that he is now a villager.");
     }
 
+
+    /**
+     * View of Cupid's step
+     * @param cupid_name
+     * @return name of the players choosen by Cupid
+     */
     public String[] cupidStep(String cupid_name) {
         String[] res = new String[2];
         this.startStep("cupid");
 
         clearConsole();
         System.out.println("---- CUPID (" + cupid_name + ") ----");
-        System.out.println("");
-        System.out.println("It's your turn, you must choose two players to make a couple.");
+        System.out.println("\nIt's your turn, you must choose two players to make a couple.");
         String player1_name = "";
         String player2_name = "";
         do {
@@ -162,30 +218,25 @@ public class View {
         return res;
     }
 
+    /**
+     * Updates the view of Cupid's step
+     */
     public void updateCupidStep() {
-        System.out.println("Great ! You can go to sleep now.");
-        System.out.println("");
-        timer("Waiting for Cupid : ");
-
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("You can inform the players who are now in a couple about their partner and their role.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
+        this.endStep("Cupid", "You can inform the players who are now in a couple about their partner and their role.");
     }
 
+
+    /**
+     * View of the seer's step
+     * @param seer_name
+     * @return name of the player choosen by the seer
+     */
     public String seerStep(String seer_name) {
         this.startStep("seer");
 
         clearConsole();
         System.out.println("---- SEER (" + seer_name + ") ----");
-        System.out.println("");
-        System.out.println("It's your turn, you must choose a player to watch his role.");
+        System.out.println("\nIt's your turn, you must choose a player to watch his role.");
         String player_name = "";
         do {
             System.out.println("Enter the player's name : ");
@@ -195,31 +246,26 @@ public class View {
         return player_name;
     }
 
+    /**
+     * Updates the view of the seer's step
+     * @param role
+     */
     public void updateSeerStep(String role) {
-        System.out.println("Great ! The player you have chosen is a " + role);
-        System.out.println("You can go to sleep now.");
-        System.out.println("");
-        timer("Waiting for the seer : ");
-
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("Be ready for the next step.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
+        System.out.println("The player you have chosen is a " + role);
+        this.endStep("seer", "Be ready for the next step.");
     }
 
+
+    /**
+     * View of the werewolves' step
+     * @return name of the player choosen by the werewolves
+     */
     public String werewolfStep() {
         this.startStep("werewolves");
 
         clearConsole();
         System.out.println("---- WEREWOLVES ----");
-        System.out.println("");
-        System.out.println("It's your turn, you must choose a player to eliminate. Agree on a name.");
+        System.out.println("\nIt's your turn, you must choose a player to eliminate. Agree on a name.");
         String player_name = "";
         do {
             System.out.println("Enter the player's name : ");
@@ -229,23 +275,23 @@ public class View {
         return player_name;
     }
 
+    /**
+     * Updates the view of the werewolves' step
+     */
     public void updateWerewolfStep() {
-        System.out.println("Great ! You can go to sleep now.");
-        System.out.println("");
-        timer("Waiting for the werewolves : ");
-
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("Be ready for the next step.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
+        this.endStep("werewolves", "Be ready for the next step.");
     }
 
+
+    /**
+     * View of the witch's step
+     * @param witch
+     * @return array with :
+     * <ul>
+     * <li> at index 0 : "yes" if the witch wants to revive the player killed by the werewolves, else "no"
+     * <li> at index 1 : "no" if the witch doesn't want to use her poisoning potion, else the name of the player targeted by the witch
+     * </ul>
+     */
     public String[] witchStep(Witch witch) {
         this.startStep("witch");
 
@@ -253,10 +299,8 @@ public class View {
 
         clearConsole();
         System.out.println("---- WITCH (" + witch.getName() + ") ----");
-        System.out.println("");
-        System.out.println("It's your turn. " + witch.getRemainingPotions());
-        System.out.println("");
-        System.out.println("The player "+this.controller.getTargeted_player_werewolf().getName()+" has been targeted by the werewolves.");
+        System.out.println("\nIt's your turn. " + witch.getRemainingPotions());
+        System.out.println("\nThe player "+this.controller.getTargeted_player_werewolf().getName()+" has been targeted by the werewolves.");
         
         if(witch.getHealing_potion()) {
             String response = "";
@@ -288,59 +332,116 @@ public class View {
         return res;
     }
 
+    /**
+     * Update the view of the witch's step
+     */
     public void updateWitchStep() {
-        System.out.println("Great ! You can go to sleep now.");
-        System.out.println("");
-        timer("Waiting for the witch : ");
-
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("Be ready for the next step.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
+        this.endStep("witch", "Be ready for the next step.");
     }
 
+
+    /**
+     * View of the guard's step
+     * @param guard
+     * @return name of the player choosen by the guard
+     */
     public String guardStep(Guard guard) {
         this.startStep("guard");
 
         clearConsole();
         System.out.println("---- GUARD (" + guard.getName() + ") ----");
-        System.out.println("");
-        System.out.println("It's your turn, you must choose a player to protect him. You can't choose the same player twice in a row.");
+        System.out.println("\nIt's your turn, you must choose a player to protect him. You can't choose the same player twice in a row.");
         String player_name = "";
         do {
             System.out.println("Enter the player's name : ");
             player_name = Lire.S();
         }while(this.controller.findPlayerByName(player_name) == -1 || (guard.getLast_player_protected() != null && guard.getLast_player_protected().getName().equals(player_name)));
 
-        System.out.println("Great ! You can go to sleep now.");
-        System.out.println("");
-        timer("Waiting for the guard : ");
+        this.endStep("guard", "Be ready for the next step.");
+        return player_name;
+    }
+
+
+    /**
+     * View of the hunter's step
+     * @param hunter_name
+     * @return name of the player choosen by the hunter
+     */
+    public String hunterStep(String hunter_name) {
+        clearConsole();
+        System.out.println("---- HUNTER (" + hunter_name + ") ----");
+        System.out.println("\nYou have been killed. Now, you have to choose a target you want to kill.");
+        String player_name = "";
+        do {
+            System.out.println("Enter the player's name : ");
+            player_name = Lire.S();
+        }while(this.controller.findPlayerByName(player_name) == -1);
 
         clearConsole();
-        System.out.println("---- GAME MASTER ----");
+        System.out.println("---- EVERYBODY ----");
+        System.out.println("\nThe hunter has killed " + player_name + ". This player was " + this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getRole_name() + ".");
+        if(this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getPartner() != null) {
+            System.out.println("This player was in couple with "+this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getPartner().getName()+" who was "+this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getRole_name()+". As a result, this player also died.");
+        }
         System.out.println("");
-        System.out.println("Be ready for the next step.");
-        System.out.println("");
-        this.printPlayers();
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
         this.timer("Next step in : ");
 
         return player_name;
     }
 
+
+    /**
+     * Asks to players to elect a captain
+     * @return name of the player choosen to be the captain
+     */
+    public String electFirstCaptain() {
+        clearConsole();
+        System.out.println("---- EVERYBODY ----");
+        System.out.println("\nYou have to designate a player to be the captain. The majority wins.");
+        String player_name = "";
+        do {
+            System.out.println("GAME MASTER, enter the name of the player who has a majority of votes : ");
+            player_name = Lire.S();
+        }while(this.controller.findPlayerByName(player_name) == -1);
+
+        System.out.println("");
+        timer("Be ready for the next step : ");
+
+        return player_name;
+    }
+
+    /**
+     * Asks to the former captain to elect a new captain
+     * @param captain_name
+     * @return name of the player choosen by the former captain
+     */
+    public String electNewCaptain(String captain_name) {
+        clearConsole();
+        System.out.println("---- CAPTAIN (" + captain_name + ") ----");
+        System.out.println("\nYou have been killed. Now, you have to choose a successor to be captain.");
+        String player_name = "";
+        do {
+            System.out.println("Enter the player's name : ");
+            player_name = Lire.S();
+        }while(this.controller.findPlayerByName(player_name) == -1);
+
+        clearConsole();
+        System.out.println("---- EVERYBODY ----");
+        System.out.println("\nGreat ! "+player_name+" is now the new captain !");
+        System.out.println("");
+        timer("Be ready for the next step : ");
+
+        return player_name;
+    }
+
+
+    /**
+     * Prints informations of the morning stage : prints players dead during the night
+     */
     public void startMorning() {
         clearConsole();
         System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("It's the morning, you have to call everyone to wake up.");
+        System.out.println("\nIt's the morning, you have to call everyone to wake up.");
 
         System.out.println("");
         this.timer("Waiting for the village : ");
@@ -366,68 +467,11 @@ public class View {
         timer("Be ready for the next step : ");
     }
 
-    public String electNewCaptain(String name) {
-        clearConsole();
-        System.out.println("---- CAPTAIN (" + name + ") ----");
-        System.out.println("");
-        System.out.println("You have been killed. Now, you have to choose a successor to be captain.");
-        String player_name = "";
-        do {
-            System.out.println("Enter the player's name : ");
-            player_name = Lire.S();
-        }while(this.controller.findPlayerByName(player_name) == -1);
 
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("Great ! "+player_name+" is now the new captain !");
-        System.out.println("");
-        timer("Be ready for the next step : ");
-
-        return player_name;
-    }
-
-    public String hunterStep(String name) {
-        clearConsole();
-        System.out.println("---- HUNTER (" + name + ") ----");
-        System.out.println("");
-        System.out.println("You have been killed. Now, you have to choose a target you want to kill.");
-        String player_name = "";
-        do {
-            System.out.println("Enter the player's name : ");
-            player_name = Lire.S();
-        }while(this.controller.findPlayerByName(player_name) == -1);
-
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("The hunter has killed " + player_name + ". This player was " + this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getRole_name() + ".");
-        if(this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getPartner() != null) {
-            System.out.println("This player was in couple with "+this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getPartner().getName()+" who was "+this.controller.getPlayers_list().get(this.controller.findPlayerByName(player_name)).getRole_name()+". As a result, this player also died.");
-        }
-        System.out.println("");
-        this.timer("Next step in : ");
-
-        return player_name;
-    }
-
-    public String electFirstCaptain() {
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("You have to designate a player to be the captain. The majority wins.");
-        String player_name = "";
-        do {
-            System.out.println("GAME MASTER, enter the name of the player who has a majority of votes : ");
-            player_name = Lire.S();
-        }while(this.controller.findPlayerByName(player_name) == -1);
-
-        System.out.println("");
-        timer("Be ready for the next step : ");
-
-        return player_name;
-    }
-
+    /**
+     * Asks to each player to vote
+     * @return array with names of players who have received votes against them
+     */
     public String[] vote() {
         String[] players_names = new String[this.controller.getPlayers_list().size()];
 
@@ -453,6 +497,10 @@ public class View {
         return players_names;
     }
 
+    /**
+     * Update the view of the stage of vote 
+     * @param player eliminated
+     */
     public void updateVote(Generic_role player) {
 
         clearConsole();
@@ -467,6 +515,13 @@ public class View {
 
     }
 
+
+    /**
+     * Asks to the captain to choose a player to eliminate
+     * @param name of the captain
+     * @param max_votes : Arraylist of players who are tied in votes
+     * @return name of the player choosen by the captain
+     */
     public String captainVote(String name, ArrayList<Generic_role> max_votes) {
         clearConsole();
         System.out.println("---- CAPTAIN (" + name + ") ----");
@@ -488,56 +543,46 @@ public class View {
         return player_name;
     }
 
+
+    /**
+     * generic method for the view of the end game
+     * @param text
+     */
+    private void win(String text) {
+        clearConsole();
+        System.out.println("---- EVERYBODY ----");
+        System.out.println("");
+        System.out.println(text);
+        System.out.println("");
+        timer("Endgame : ");
+    }
+
+    /**
+     * View for the village's win
+     */
     public void villageWin() {
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("The game is finished. THE VILLAGE WON !");
-        System.out.println("");
-        timer("Endgame : ");
+        this.win("The game is finished. THE VILLAGE WON !");
     }
 
+    /**
+     * View for the werewolves' win
+     */
     public void werewolvesWin() {
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("The game is finished. THE WEREWOLVES WON !");
-        System.out.println("");
-        timer("Endgame : ");
+        this.win("The game is finished. THE WEREWOLVES WON !");
     }
 
-    public void startNight() {
-        clearConsole();
-        System.out.println("---- GAME MASTER ----");
-        System.out.println("");
-        System.out.println("It's the night, the village goes to sleep, players close their eyes.");
-        System.out.println("");
-        System.out.println("Here is the list of players in this step of the game :");
-        
-        this.printPlayers();
-
-        System.out.println("");
-        System.out.println("If you're done, press enter to continue :");
-        Lire.S();
-        this.timer("Next step in : ");
-    }
-
+    /**
+     * View for the equality
+     */
     public void equality() {
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("The game is finished. EQUALITY !");
-        System.out.println("");
-        timer("Endgame : ");
+        this.win("The game is finished. EQUALITY !");
     }
 
+    /**
+     * View for the couple's win
+     */
     public void coupleWin() {
-        clearConsole();
-        System.out.println("---- EVERYBODY ----");
-        System.out.println("");
-        System.out.println("The game is finished. THE COUPLE WON ! A werewolf and a villager...");
-        System.out.println("");
-        timer("Endgame : ");
+       this.win("The game is finished. THE COUPLE WON ! A werewolf and a villager...");
     }
 
 }

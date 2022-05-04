@@ -8,7 +8,7 @@ public abstract class Generic_role {
     // name of the player
     protected final String name;
 
-    // boolean : true is the player is dead, else false
+    // boolean : true if the player is dead, else false
     protected boolean isDead;
 
     // partner of the player choosed by Cupid 
