@@ -1,7 +1,13 @@
 package controller;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 import model.*;
 import view.View;
@@ -13,6 +19,9 @@ public class Controller {
 
     // list of players
     private ArrayList<Generic_role> players_list;
+
+    // list of players dead
+    private ArrayList<Generic_role> players_dead_list;
 
     // boolean : true if the game is over, else false
     private boolean game_over;
@@ -37,6 +46,7 @@ public class Controller {
     public Controller() {
         this.view = new View(this);
         this.players_list = new ArrayList<Generic_role>();
+        this.players_dead_list = new ArrayList<Generic_role>();
         this.game_over = false;
         this.village_win = false;
         this.equality = false;
@@ -124,7 +134,7 @@ public class Controller {
 
 
     /**
-     * looks if the game is over
+     * Looks if the game is over
      */
     private void isGameFinish() {
         // if the players list is empty, equality
@@ -156,6 +166,51 @@ public class Controller {
             this.game_over = true;
             this.village_win = true;
             this.equality = true;
+        }
+    }
+
+
+    /**
+     * Loads the names of players saved in the file data.txt
+     * @return ArrayList<String> of all players' names saved in data.txt
+     */
+    public ArrayList<String> loadPlayers() {
+        ArrayList<String> res  = new ArrayList<String>();
+        try {
+            FileInputStream file = new FileInputStream("data.txt");   
+            Scanner scanner = new Scanner(file);  
+            
+            while(scanner.hasNextLine())
+            {
+                res.add(scanner.nextLine());
+            }
+            scanner.close();    
+            }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+
+    /**
+     * Writes the names of the players (deads or not) in the file data.txt
+     */
+    public void savePlayers() {
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter("data.txt", "UTF-8");
+            for(Generic_role p : this.players_list) {
+                writer.println(p.getName());
+            }
+            for(Generic_role p : this.players_dead_list) {
+                writer.println(p.getName());
+            }
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
@@ -324,6 +379,7 @@ public class Controller {
             }
         }
         this.players_list.removeAll(toRemove);
+        this.players_dead_list.addAll(toRemove);
 
         if(hunter != null) { this.hunterStep(hunter); }
 

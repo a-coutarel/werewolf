@@ -68,28 +68,42 @@ public class View {
 
 
     /**
-     * Asks the number of players and their names
+     * Asks if you want to load player's names saved
+     * or Asks the number of players and their names
      * @return ArrayList<String> of players'names
      */
     public ArrayList<String> initPlayers() {
         ArrayList<String> res  = new ArrayList<String>();
+        String response;
         clearConsole();
         timer("Start of the game in ");
-        int nb_players;
-        do{
-            clearConsole();
-            System.out.println("Enter the number of players (8-18)");
-            nb_players = Lire.i();
-        }while(nb_players < 8 || nb_players > 18);
-
-        System.out.println("Now make sure you enter a different name for each player !");
-        for(int i = 1; i <= nb_players; i++) {
-            System.out.println("Enter the name of the player " + i);
-            final String name = Lire.S();
-            res.add(name);
+        do {
+            System.out.println("\nDo you want to load the list of players saved ? yes/no");
+            response = Lire.S();
+        } while(!response.equals("yes") && !response.equals("no"));
+        if(response.equals("yes")) {
+            res = this.controller.loadPlayers();
+            if(res.size()<8) {
+                timer("The file doesn't contain enough players. Datas will not be loaded.");
+                res.clear();
+            }
         }
+        if(res.size()==0 || response.equals("no")) {
+            int nb_players;
+            do{
+                clearConsole();
+                System.out.println("\nEnter the number of players (8-18)");
+                nb_players = Lire.i();
+            }while(nb_players < 8 || nb_players > 18);
 
-        return res;
+            System.out.println("Now make sure you enter a different name for each player !");
+            for(int i = 1; i <= nb_players; i++) {
+                System.out.println("Enter the name of the player " + i);
+                final String name = Lire.S();
+                res.add(name);
+            }
+        }
+        return res; 
     }
 
 
@@ -554,6 +568,11 @@ public class View {
         System.out.println("");
         System.out.println(text);
         System.out.println("");
+        System.out.println("Do you want to save the list of players for another game ? Write 'yes' or 'no' :");
+        String response = Lire.S();
+        if(response.equals("yes")) {
+            this.controller.savePlayers();
+        }
         timer("Endgame : ");
     }
 
