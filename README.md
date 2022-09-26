@@ -76,17 +76,17 @@ Le meneur de jeu n'a qu'à suivre les informations affichées à l'écran pour f
 Résumé (des étapes en plus ou moins peuvent apparaitre suivant l'avancée de la partie (ex: élection du capitaine, coup de fusil du chasseur...)) :
 
 IV.1. Tour de préparation
-1 - Le meneur appelle le Voleur.
-2 - Le meneur appelle Cupidon.
+- 1 - Le meneur appelle le Voleur.
+- 2 - Le meneur appelle Cupidon.
 
 IV.2. Tour normal
-1 – Le meneur appelle la Voyante
-2 – Le meneur appelle les Loups-Garous
-3 – Le meneur appelle la Sorcière
-3 – Le meneur appelle le guarde
-4 – Le meneur réveille tout le village
-5 – Le village débat des suspects
-6 – Le village vote
-7 – Le village s’endort
+- 1 – Le meneur appelle la Voyante
+- 2 – Le meneur appelle les Loups-Garous
+- 3 – Le meneur appelle la Sorcière
+- 3 – Le meneur appelle le guarde
+- 4 – Le meneur réveille tout le village
+- 5 – Le village débat des suspects
+- 6 – Le village vote
+- 7 – Le village s’endort
 
 inspiré de https://www.regledujeu.fr/loup-garou-regle/
