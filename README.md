@@ -18,20 +18,24 @@ Après discussions, ils votent l’exécution d’un suspect qui sera éliminé 
 
 
 Simple Villageois
+
 Il n’a aucune compétence particulière.
 Ses seules armes sont la capacité d’analyse des comportements pour identifier les Loups-Garous, et la force de conviction pour empêcher l’exécution de l’innocent qu’il est.
 
 
 Voyante
+
 Chaque nuit, elle découvre la vraie personnalité d’un joueur de son choix.
 Elle doit aider les autres Villageois, mais rester discrète pour ne pas être démasquée par les Loups-Garous.
 
 
 Chasseur
+
 S’il se fait dévorer par les Loups-Garous ou exécuter malencontreusement par les joueurs, le Chasseur doit répliquer avant de rendre l’âme, en éliminant immédiatement n’importe quel autre joueur de son choix.
 
 
 Cupidon
+
 En décochant ses célèbres flèches magiques, Cupidon a le pouvoir de rendre 2 personnes amoureuses à jamais.
 La première nuit (tour préliminaire), il désigne les 2 joueurs amoureux. Cupidon peut, s’il le veut, se désigner comme l’un des deux Amoureux.
 Si l’un des Amoureux est éliminé, l’autre meurt de chagrin immédiatement.
@@ -41,6 +45,7 @@ Pour vivre en paix leur amour et gagner la partie, ils doivent éliminer tous le
 
 
 Sorcière
+
 Elle sait concocter 2 potions extrêmement puissantes :
 une potion de guérison, pour ressusciter le joueur tué par les Loups-Garous, une potion d’empoisonnement, utilisée la nuit pour éliminer un joueur.
 La Sorcière doit utiliser chaque potion 1 seule fois dans la partie. Elle peut se servir des ses 2 potions la même nuit.
@@ -49,37 +54,44 @@ La Sorcière peut utiliser les potions à son profit, et donc se guérir elle-m�
 
 
 Voleur
+
 La première nuit, le Voleur echange son rôle avec celui du joueur qu'il désignera.
 Il jouera désormais ce personnage jusqu’à la fin de la partie.
 Le joueur qui s'est fait volé son rôle devient un simple villageois.
 
 
 Capitaine
+
 Cette carte est confiée à un des joueurs, en plus de sa carte personnage.
 Le Capitaine est élu par vote, à la majorité relative. On ne peut refuser l’honneur d’être Capitaine.
 S'il y a égalité dans les votes éliminatoires à la fin d'un tour, c'est au capitaine de trancher et de choisir le joueur a éliminé parmi tous les joueurs ex aequo. Si ce joueur se fait éliminer, dans son dernier souffle il désigne son successeur.
 
 Guarde
+
 Le guarde a le pouvoir de protéger une personne durant la nuit. Il désigne un joueur qui sera intouchable, même s'il a déjà été attaqué pendant la nuit, il ne mourra pas le matin. 
 Le guarde ne peut pas protéger la même personne 2 nuits successives.
 
 
 III. Conditions de Victoire
+
 Les Villageois gagnent dès qu’ils réussissent à éliminer le dernier Loup-Garou.
 Les Loups-Garous gagnent s’ils éliminent le dernier des Villageois.
 Cas particulier : Si les Amoureux sont 1 Loup-Garou + 1 Villageois, ils gagnent dès qu’ils ont éliminé tous les autres.
 Il peut aussi y avoir égalité (ex: les deux derniers joueurs en vie sont un loup-garou et le chasseur, le loup tue le chasseur pendant la nuit et au réveil le chasseur tire sur le loup...).
 
 IV. Déroulement du jeu
+
 Le meneur de jeu n'a qu'à suivre les informations affichées à l'écran pour faire avancer la partie.
 
 Résumé (des étapes en plus ou moins peuvent apparaitre suivant l'avancée de la partie (ex: élection du capitaine, coup de fusil du chasseur...)) :
 
 IV.1. Tour de préparation
+
 - 1 - Le meneur appelle le Voleur.
 - 2 - Le meneur appelle Cupidon.
 
 IV.2. Tour normal
+
 - 1 – Le meneur appelle la Voyante
 - 2 – Le meneur appelle les Loups-Garous
 - 3 – Le meneur appelle la Sorcière
